@@ -1,73 +1,186 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# API NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Introdução
 
-## Description
+Esta API foi construída com NestJS e fornece endpoints para operações de usuários e autenticação.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Endpoints
 
-## Installation
+### UserController
 
-```bash
-$ npm install
-```
+| Método   | Endpoint      | Descrição                           |
+| -------- | ------------- | ----------------------------------- |
+| `POST`   | `/users`      | Cria um novo usuário               |
+| `GET`    | `/users`      | Lista todos os usuários            |
+| `GET`    | `/users/:id`  | Retorna um usuário específico      |
+| `PUT`    | `/users/:id`  | Atualiza completamente um usuário |
+| `PATCH`  | `/users/:id`  | Atualiza parcialmente um usuário   |
+| `DELETE` | `/users/:id`  | Remove um usuário                  |
 
-## Running the app
+#### Exemplo de Requisições e Respostas
 
-```bash
-# development
-$ npm run start
+- **POST /users**
+  - **Descrição**: Cria um novo usuário.
+  - **Body**:
+    ```json
+    {
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "password": "123456"
+    }
+    ```
+  - **Resposta**:
+    ```json
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    }
+    ```
+  - **Erros**:
+    - `400 Bad Request`: Quando o corpo da requisição está inválido.
+    - `409 Conflict`: Quando o email já está em uso.
 
-# watch mode
-$ npm run start:dev
+- **GET /users**
+  - **Descrição**: Lista todos os usuários.
+  - **Resposta**:
+    ```json
+    [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "email": "johndoe@example.com"
+      },
+      {
+        "id": 2,
+        "name": "Jane Smith",
+        "email": "janesmith@example.com"
+      }
+    ]
+    ```
 
-# production mode
-$ npm run start:prod
-```
+- **GET /users/:id**
+  - **Descrição**: Retorna um usuário específico.
+  - **Resposta**:
+    ```json
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com"
+    }
+    ```
+  - **Erros**:
+    - `404 Not Found`: Quando o ID do usuário não existe.
 
-## Test
+- **PUT /users/:id**
+  - **Descrição**: Atualiza completamente os dados do usuário.
+  - **Body**:
+    ```json
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "newpassword123"
+    }
+    ```
+  - **Resposta**:
+    ```json
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    }
+    ```
+  - **Erros**:
+    - `400 Bad Request`: Quando os dados fornecidos são inválidos.
+    - `404 Not Found`: Quando o ID do usuário não existe.
 
-```bash
-# unit tests
-$ npm run test
+- **DELETE /users/:id**
+  - **Descrição**: Remove um usuário.
+  - **Resposta**:
+    ```json
+    {
+      "success": true
+    }
+    ```
+  - **Erros**:
+    - `404 Not Found`: Quando o ID do usuário não existe.
 
-# e2e tests
-$ npm run test:e2e
+### AuthController
 
-# test coverage
-$ npm run test:cov
-```
+| Método   | Endpoint          | Descrição                           |
+| -------- | ------------------ | ----------------------------------- |
+| `POST`   | `/auth/login`      | Autentica um usuário               |
+| `POST`   | `/auth/register`   | Registra um novo usuário           |
+| `POST`   | `/auth/forget`     | Envia email para redefinir senha   |
+| `POST`   | `/auth/reset`      | Redefine senha usando um token     |
+| `POST`   | `/auth/me`         | Retorna informações do usuário logado |
+| `POST`   | `/auth/photo`      | Faz upload de uma foto do usuário  |
 
-## Support
+#### Exemplos de Requisições e Respostas
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **POST /auth/login**
+  - **Descrição**: Autentica um usuário.
+  - **Body**:
+    ```json
+    {
+      "email": "johndoe@example.com",
+      "password": "123456"
+    }
+    ```
+  - **Resposta**:
+    ```json
+    {
+      "accessToken": "jwt_token_here"
+    }
+    ```
+  - **Erros**:
+    - `401 Unauthorized`: Quando as credenciais são inválidas.
 
-## Stay in touch
+- **POST /auth/register**
+  - **Descrição**: Registra um novo usuário.
+  - **Body**:
+    ```json
+    {
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "password": "123456"
+    }
+    ```
+  - **Resposta**:
+    ```json
+    {
+      "accessToken": "jwt_token_here"
+    }
+    ```
+  - **Erros**:
+    - `400 Bad Request`: Quando os dados fornecidos são inválidos.
+    - `409 Conflict`: Quando o email já está em uso.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **POST /auth/forget**
+  - **Descrição**: Envia um email para redefinir a senha.
+  - **Body**:
+    ```json
+    {
+      "email": "johndoe@example.com"
+    }
+    ```
+  - **Resposta**:
+    ```json
+    {
+      "success": true
+    }
+    ```
 
-## License
+---
 
-Nest is [MIT licensed](LICENSE).
+## Exemplos de Respostas
+
+### Erros Comuns
+
+- **400 Bad Request**: Os dados fornecidos estão incorretos ou ausentes.
+- **401 Unauthorized**: O usuário não está autenticado para acessar o recurso.
+- **404 Not Found**: O recurso solicitado não foi encontrado.
+- **409 Conflict**: Um conflito ocorreu, como tentar registrar um email já em uso.
+
+---
