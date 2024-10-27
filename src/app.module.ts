@@ -1,4 +1,4 @@
-import {APP_GUARD} from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { Module, forwardRef } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
@@ -9,13 +9,17 @@ import { ThrottlerGuard } from '@nestjs/throttler/dist/throttler.guard';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './user/entity/user.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: process.env.ENV === 'test' ? '.env.test' : '.env',
+    }),
     ThrottlerModule.forRoot({
-      ttl:60,
-      limit:100
+      ttl: 60,
+      limit: 100,
     }),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
@@ -24,12 +28,12 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         host: 'smtp.ethereal.email',
         port: 587,
         auth: {
-            user: 'marcelo44@ethereal.email',
-            pass: 'YutK7Qq3QFwDDDahfC'
-        }
+          user: 'teste@teste.email',
+          pass: 'teste',
+        },
       },
       defaults: {
-        from: '"Hcode" <marcelo44@ethereal.email>',
+        from: '"Victor" <victor@teste.email>',
       },
       template: {
         dir: __dirname + '/templates',
@@ -39,12 +43,25 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         },
       },
     }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [UserEntity],
+      synchronize: process.env.ENV === 'development',
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  }],
-  exports: [AppService]
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
+  exports: [AppService],
 })
 export class AppModule {}
